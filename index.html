@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>25 Minute Timer</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: transparent;
+    overflow: hidden;
+  }
+
+  .scene {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  svg {
+    width: min(100vw, 100vh);
+    height: min(100vw, 100vh);
+    display: block;
+  }
+
+  .ring-track {
+    fill: none;
+    stroke: #e0e0e0;
+    stroke-width: 3;
+  }
+
+  .ring-progress {
+    fill: none;
+    stroke: #111;
+    stroke-width: 3;
+    stroke-linecap: round;
+    transform-origin: center;
+    transform: rotate(-90deg);
+    transition: stroke-dashoffset 1s linear;
+  }
+
+  .time-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    fill: #111;
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+</style>
+</head>
+<body>
+<div class="scene">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <circle class="ring-track" cx="50" cy="50" r="42"/>
+    <circle class="ring-progress" id="ring" cx="50" cy="50" r="42"
+            stroke-dasharray="263.89"
+            stroke-dashoffset="0"/>
+    <text class="time-text" id="timeText" x="50" y="50">25</text>
+  </svg>
+</div>
+
+<script>
+  const TOTAL    = 25 * 60;
+  const CIRC     = 263.89;
+  const ring     = document.getElementById('ring');
+  const timeText = document.getElementById('timeText');
+
+  let remaining = TOTAL;
+
+  function render() {
+    const pct = remaining / TOTAL;
+    ring.style.strokeDashoffset = CIRC * (1 - pct);
+    timeText.textContent = remaining <= 0 ? '0' : String(Math.ceil(remaining / 60));
+  }
+
+  function tick() {
+    if (remaining <= 0) return;
+    remaining--;
+    render();
+  }
+
+  render();
+  setInterval(tick, 1000);
+</script>
+</body>
+</html>
